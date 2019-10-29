@@ -1,8 +1,11 @@
 const mongoose = require('mongoose')
+const { ApolloServer } = require('apollo-server-express')
 
 const app = require('./app')
+const typeDefs = require('./typeDefs')
+const resolvers = require('./resolvers')
 const {
-  APP_PORT,
+  APP_PORT, IN_PROD,
   MDB_URI,
   MDB_USER_REPLACE, MDB_PASS_REPLACE,
   MDB_USER, MDB_PASS
@@ -17,11 +20,23 @@ async function main () {
   try {
     await mongoose.connect(
       uri,
-      { useNewUrlParser: true, useUnifiedTopology: true }
+      {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        useCreateIndex: true
+      }
     )
 
-    const port = APP_PORT || 4000
+    const server = new ApolloServer({
+      typeDefs,
+      resolvers,
+      playground: !IN_PROD,
+      context: ({ req, res }) => ({ req, res })
+    })
 
+    server.applyMiddleware({ app })
+
+    const port = APP_PORT || 4000
     app.listen(port, () =>
       console.log(`Server is running on port: ${port}`)
     )
