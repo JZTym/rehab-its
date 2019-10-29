@@ -9,11 +9,18 @@ module.exports = gql`
 
   extend type Mutation {
     #TODO: Add mutations
-    createUser(
+    signup(
       email: String!
       name: String!
       password: String!
     ): User
+    login(
+      email: String!
+      password: String!
+    ): User
+    removeUser (
+      id: ID!
+    ): Boolean
   }
 
   type User {
