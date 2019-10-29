@@ -1,0 +1,30 @@
+{
+  "name": "mern_rehab_its",
+  "version": "1.0.0",
+  "description": "Inventory tracking system for rehab facilities built with the MERN stack",
+  "main": "index.js",
+  "scripts": {
+    "start": "npx cross-env APP_PORT=4000 NODE_ENV=production node -r esm",
+    "dev": "npx cross-env APP_PORT=4000 NODE_ENV=development nodemon -r esm"
+  },
+  "author": "Justin Cristi",
+  "license": "MIT",
+  "dependencies": {
+    "apollo-server-express": "^2.9.7",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "concurrently": "^5.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "esm": "^3.2.25",
+    "express": "^4.17.1",
+    "graphql": "^14.5.8",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.7.7"
+  },
+  "devDependencies": {
+    "cross-env": "^6.0.3",
+    "nodemon": "^1.19.4",
+    "standard": "^14.3.1"
+  }
+}
