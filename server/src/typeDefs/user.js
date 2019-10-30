@@ -17,7 +17,8 @@ module.exports = gql`
     login(
       email: String!
       password: String!
-    ): User
+    ): LoginResponse
+    invalidateTokens: Boolean
     removeUser (
       id: ID!
     ): Boolean
@@ -27,5 +28,9 @@ module.exports = gql`
     id: ID!
     email: String!
     name: String!
+  }
+
+  type LoginResponse {
+    accessToken: String!
   }
 `

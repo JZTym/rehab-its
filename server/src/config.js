@@ -10,7 +10,9 @@ export const {
   MDB_USER = process.env.MDB_USER,
   MDB_PASS = process.env.MDB_PASS,
 
-  HASH_SALT = process.env.HASH_SALT
+  HASH_SALT_CYCLES = process.env.HASH_SALT_CYCLES,
+  JWT_ACCESS_SECRET = process.env.JWT_ACCESS_SECRET,
+  JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET
 } = process.env
 
 export const IN_PROD = NODE_ENV === 'production'
