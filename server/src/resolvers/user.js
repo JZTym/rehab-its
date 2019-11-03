@@ -5,7 +5,11 @@ const { User } = require('../models')
 const { HASH_SALT_CYCLES } = require('../config')
 const { createTokens } = require('../auth')
 
-const { INVALID_USER_OR_PASS, NOT_AUTHENTICATED } = require('../error')
+const {
+  USER_ALREADY_EXISTS,
+  INVALID_USER_OR_PASS,
+  NOT_AUTHENTICATED
+} = require('../error')
 
 module.exports = {
   Query: {
@@ -29,25 +33,24 @@ module.exports = {
     }) => {
       const existingUser = await User.findOne({ email })
       if (existingUser) {
-        throw new ValidationError('Email address is already used!')
+        throw new ValidationError(USER_ALREADY_EXISTS)
       }
 
       // Hash the password
       const passHash = await hash(password, Number.parseInt(HASH_SALT_CYCLES))
 
-      const user = await (new User({
+      const user = new User({
         email: email,
         name: name,
         password: passHash
-      }))
+      })
 
       try {
         await user.save()
         return user
       } catch (err) {
-        console.log(err)
+        throw new Error(err)
       }
-      return null
     },
     login: async (_, {
       email,
@@ -89,8 +92,14 @@ module.exports = {
       res.clearCookie('rid')
     },
     removeUser: async (_, { id }) => {
-      await User.findByIdAndDelete(id)
-      return true
+      const user = User.findOne({ id })
+
+      try {
+        user.remove()
+        return true
+      } catch (err) {
+        throw new Error(err)
+      }
     }
   }
 }
