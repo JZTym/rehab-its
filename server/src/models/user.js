@@ -12,7 +12,7 @@ const userSchema = new Schema({
   },
   name: String
 }, {
-  timeStamps: true
+  timestamps: true
 })
 
 const User = mongoose.model('User', userSchema)

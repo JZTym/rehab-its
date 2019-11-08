@@ -28,7 +28,7 @@ module.exports = {
       })
 
       try {
-        item.save()
+        await item.save()
         return item
       } catch (err) {
         throw new Error(err)

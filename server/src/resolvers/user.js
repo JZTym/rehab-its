@@ -92,7 +92,7 @@ module.exports = {
       res.clearCookie('rid')
     },
     removeUser: async (_, { id }) => {
-      const user = User.findOne({ id })
+      const user = await User.findOne({ _id: id })
 
       try {
         user.remove()
