@@ -1,9 +1,12 @@
 const mongoose = require('mongoose')
 const { Schema } = mongoose
-// const { GraphQLDateTime } = require('graphql-iso-date')
 
 const transactionSchema = new Schema({
   category: {
+    type: String,
+    required: true
+  },
+  name: {
     type: String,
     required: true
   },

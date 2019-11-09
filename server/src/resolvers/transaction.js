@@ -1,6 +1,5 @@
 const { Transaction, Item } = require('../models')
 const { UserInputError, ValidationError } = require('apollo-server-express')
-const { GraphQLDateTime } = require('graphql-iso-date')
 
 const {
   TRANSACTION_NO_CATEGORY,
@@ -8,17 +7,16 @@ const {
   TRANSACTION_NO_PRICE,
   TRANSACTION_NO_DURATION_DATE,
   TRANSACTION_INVALID_ITEM,
-  TRANSACTION_NOT_FOUND
+  TRANSACTION_NOT_FOUND,
+  TRANSACTION_NO_DOCTOR_NAME
 } = require('../error')
 
 module.exports = {
-  DateTime: GraphQLDateTime,
-
   Transaction: {
-    dateStartStr: (root) => (!root.dateStart) ? null : Date(root.dateStart),
-    dateEndStr: (root) => (!root.dateEnd) ? null : Date(root.dateEnd),
-    createdAtStr: (root) => (!root.createdAt) ? null : Date(root.createdAt),
-    updatedAtStr: (root) => (!root.updatedAt) ? null : Date(root.updatedAt)
+    dateStart: (root) => (!root.dateStart) ? null : (new Date(root.dateStart)).toUTCString(),
+    dateEnd: (root) => (!root.dateEnd) ? null : (new Date(root.dateEnd)).toUTCString(),
+    createdAt: (root) => (!root.createdAt) ? null : (new Date(root.createdAt)).toUTCString(),
+    updatedAt: (root) => (!root.updatedAt) ? null : (new Date(root.updatedAt)).toUTCString()
   },
 
   Query: {
@@ -31,6 +29,7 @@ module.exports = {
     addTransaction: async (_, {
       category,
       item: itemID,
+      name,
       price,
       dateStart,
       dateEnd
@@ -47,18 +46,30 @@ module.exports = {
       if (category === 'TREATMENT' && !(dateStart && dateEnd)) {
         throw new ValidationError(TRANSACTION_NO_DURATION_DATE)
       }
+      if (category === 'TREATMENT' && !name) {
+        throw new ValidationError(TRANSACTION_NO_DOCTOR_NAME)
+      }
 
-      if (itemID && !price) {
+      if (
+        category !== 'TREATMENT' &&
+        category !== 'CLINIC'
+      ) {
+        name = category
+      }
+
+      if (itemID) {
         const item = await Item.findOne({ _id: itemID })
         if (!item) {
           throw new ValidationError(TRANSACTION_INVALID_ITEM)
         }
+        name = item.name
         price = item.price
       }
 
       const transaction = new Transaction({
         category: category,
         item: itemID,
+        name: name,
         price: price,
         dateStart: dateStart,
         dateEnd: dateEnd
@@ -74,6 +85,7 @@ module.exports = {
     updateTransaction: async (_, {
       id,
       category,
+      name,
       item: itemID,
       price,
       dateStart,

@@ -1,8 +1,6 @@
 const { gql } = require('apollo-server-express')
 
-module.exports = gql`
-  scalar DateTime
-    
+module.exports = gql`    
   extend type Query {
     transactions: [Transaction!]!
   }
@@ -11,17 +9,19 @@ module.exports = gql`
     addTransaction (
       category: ItemCategory!
       item: ID
+      name: String
       price: Float
-      dateStart: DateTime
-      dateEnd: DateTime
+      dateStart: String
+      dateEnd: String
     ): Transaction
     updateTransaction (
       id: ID!
       category: ItemCategory
       item: ID
+      name: String
       price: Float
-      dateStart: DateTime
-      dateEnd: DateTime
+      dateStart: String
+      dateEnd: String
     ): Transaction
     removeTransaction (id: ID!): Boolean
   }
@@ -30,15 +30,12 @@ module.exports = gql`
     id: ID!
     category: ItemCategory!
     item: ID
+    name: String!
     price: Float!
-    dateStart: DateTime
-    dateEnd: DateTime
-    createdAt: DateTime
-    updatedAt: DateTime
-    dateStartStr: String
-    dateEndStr: String
-    createdAtStr: String
-    updatedAtStr: String
+    dateStart: String
+    dateEnd: String
+    createdAt: String
+    updatedAt: String
   }
 
   enum ItemCategory {

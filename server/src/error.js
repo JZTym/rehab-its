@@ -5,6 +5,10 @@ export const {
 
   USER_ALREADY_EXISTS = 'Username already exists!',
 
+  PATIENT_ALREADY_EXISTS = 'Patient already exists! Use updatePatient to update the patient instead',
+  PATIENT_DOESNT_EXIST = 'Patient doesn\'t exist!',
+  PATIENT_NOTHING_TO_UPDATE = 'There are not patient properties to update',
+
   ITEM_ALREADY_EXISTS = 'Item already exists! Use updateItem to update the item instead.',
   ITEM_DOESNT_EXIST = 'Item doesn\'t exist!',
   ITEM_NOTHING_TO_UPDATE = 'There are no item properties to update',
@@ -15,5 +19,6 @@ export const {
   TRANSACTION_NO_DURATION_DATE = 'TREATMENT period must have a start and end date!',
   TRANSACTION_INVALID_CATEGORY = 'Category is invalid!',
   TRANSACTION_INVALID_ITEM = 'Item ID is invalid',
-  TRANSACTION_NOT_FOUND = 'Transaction not found!'
+  TRANSACTION_NOT_FOUND = 'Transaction not found!',
+  TRANSACTION_NO_DOCTOR_NAME = 'Please enter name of doctor doing the TREATMENT!'
 } = String
