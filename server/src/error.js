@@ -14,6 +14,7 @@ export const {
   ITEM_NOTHING_TO_UPDATE = 'There are no item properties to update',
 
   TRANSACTION_NO_CATEGORY = 'Category is not defined!',
+  TRANSACTION_NO_PATIENT = 'Patient ID is not defined!',
   TRANSACTION_NO_ITEM = 'Transactions of type CLINIC needs an Item ID!',
   TRANSACTION_NO_PRICE = 'Transactions that are NOT CLINIC types need a unit price!',
   TRANSACTION_NO_DURATION_DATE = 'TREATMENT period must have a start and end date!',

@@ -1,8 +1,9 @@
-const { Transaction, Item } = require('../models')
+const { Patient, Transaction, Item } = require('../models')
 const { UserInputError, ValidationError } = require('apollo-server-express')
 
 const {
   TRANSACTION_NO_CATEGORY,
+  TRANSACTION_NO_PATIENT,
   TRANSACTION_NO_ITEM,
   TRANSACTION_NO_PRICE,
   TRANSACTION_NO_DURATION_DATE,
@@ -13,6 +14,13 @@ const {
 
 module.exports = {
   Transaction: {
+    patientName: async (root) => {
+      if (!root.patientId) {
+        return null
+      }
+      const patient = await Patient.findOne({ _id: root.patientId })
+      return patient.name
+    },
     dateStart: (root) => (!root.dateStart) ? null : (new Date(root.dateStart)).toUTCString(),
     dateEnd: (root) => (!root.dateEnd) ? null : (new Date(root.dateEnd)).toUTCString(),
     createdAt: (root) => (!root.createdAt) ? null : (new Date(root.createdAt)).toUTCString(),
@@ -28,7 +36,8 @@ module.exports = {
   Mutation: {
     addTransaction: async (_, {
       category,
-      item: itemID,
+      patientId,
+      itemId,
       name,
       price,
       dateStart,
@@ -37,7 +46,10 @@ module.exports = {
       if (!category) {
         throw new ValidationError(TRANSACTION_NO_CATEGORY)
       }
-      if (category === 'CLINIC' && !itemID) {
+      if (!patientId) {
+        throw new ValidationError(TRANSACTION_NO_PATIENT)
+      }
+      if (category === 'CLINIC' && !itemId) {
         throw new ValidationError(TRANSACTION_NO_ITEM)
       }
       if (category !== 'CLINIC' && !price) {
@@ -57,8 +69,8 @@ module.exports = {
         name = category
       }
 
-      if (itemID) {
-        const item = await Item.findOne({ _id: itemID })
+      if (itemId) {
+        const item = await Item.findOne({ _id: itemId })
         if (!item) {
           throw new ValidationError(TRANSACTION_INVALID_ITEM)
         }
@@ -67,12 +79,13 @@ module.exports = {
       }
 
       const transaction = new Transaction({
-        category: category,
-        item: itemID,
-        name: name,
-        price: price,
-        dateStart: dateStart,
-        dateEnd: dateEnd
+        category,
+        patientId,
+        itemId,
+        name,
+        price,
+        dateStart,
+        dateEnd
       })
 
       try {
@@ -86,7 +99,7 @@ module.exports = {
       id,
       category,
       name,
-      item: itemID,
+      itemId,
       price,
       dateStart,
       dateEnd
@@ -95,11 +108,7 @@ module.exports = {
       if (!transaction) {
         throw new UserInputError(TRANSACTION_NOT_FOUND)
       }
-
-      if (!category) {
-        throw new ValidationError(TRANSACTION_NO_CATEGORY)
-      }
-      if (category === 'CLINIC' && !itemID) {
+      if (category === 'CLINIC' && !itemId) {
         throw new ValidationError(TRANSACTION_NO_ITEM)
       }
       if (category !== 'CLINIC' && !price) {
@@ -109,8 +118,8 @@ module.exports = {
         throw new ValidationError(TRANSACTION_NO_DURATION_DATE)
       }
 
-      if (itemID && !price) {
-        const item = await Item.findOne({ _id: itemID })
+      if (itemId && !price) {
+        const item = await Item.findOne({ _id: itemId })
         if (!item) {
           throw new ValidationError(TRANSACTION_INVALID_ITEM)
         }

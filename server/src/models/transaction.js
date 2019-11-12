@@ -6,13 +6,18 @@ const transactionSchema = new Schema({
     type: String,
     required: true
   },
+  patientId: {
+    type: Schema.ObjectId,
+    ref: 'Patient',
+    required: true
+  },
+  itemId: {
+    type: Schema.ObjectId,
+    ref: 'Item'
+  },
   name: {
     type: String,
     required: true
-  },
-  item: {
-    type: Schema.ObjectId,
-    ref: 'Item'
   },
   price: {
     type: Number,

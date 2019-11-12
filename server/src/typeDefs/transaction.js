@@ -8,7 +8,8 @@ module.exports = gql`
   extend type Mutation {
     addTransaction (
       category: ItemCategory!
-      item: ID
+      patientId: ID!
+      itemId: ID
       name: String
       price: Float
       dateStart: String
@@ -17,7 +18,8 @@ module.exports = gql`
     updateTransaction (
       id: ID!
       category: ItemCategory
-      item: ID
+      patientId: ID
+      itemId: ID
       name: String
       price: Float
       dateStart: String
@@ -29,7 +31,9 @@ module.exports = gql`
   type Transaction {
     id: ID!
     category: ItemCategory!
-    item: ID
+    patientId: ID!
+    patientName: String!
+    itemId: ID
     name: String!
     price: Float!
     dateStart: String
